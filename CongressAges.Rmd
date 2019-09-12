@@ -1,0 +1,29 @@
+    ---
+title: "congress"
+output: html_document
+---
+
+# People in Congress are Very Old
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(fivethirtyeight)
+```
+```{r}
+data("congress_age")
+congress_age %>%
+  arrange(desc(age))
+```
+
+```{r}
+congress_age %>%
+  mutate(year = format(termstart, "%Y")) %>% 
+  filter(party %in% c("R", "D")) %>% 
+  group_by(year, party) %>%
+  summarize(avgAge = mean(age)) %>% 
+  ggplot(aes(x = year, y = avgAge, group = party, color = party)) +
+  geom_line() + expand_limits(y = 40) + ggtitle("Average Age of Members of Congress") + 
+  labs(subtitle = "At start of term, 1947-2013")
+```
+
+
